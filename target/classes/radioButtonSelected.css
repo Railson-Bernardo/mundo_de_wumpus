@@ -1,0 +1,12 @@
+.radio-button .radio{
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.radio-button .radio .dot {
+    -fx-background-insets: 0;
+    -fx-padding: 10px;
+}
+.radio-button:selected .radio {
+    -fx-mark-color: #fcc100;
+    -fx-background-color: -fx-mark-color;
+}

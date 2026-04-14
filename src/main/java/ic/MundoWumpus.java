@@ -64,9 +64,13 @@ public class MundoWumpus {
     // Estados iniciais do agente(jogador)
     private int posicaoX = 0, posicaoY = 0;     // Posição inicial do agente (1,1 no labirinto)
     private int pontuacao = 0;                  // Pontuação inicial do agente
-    private int flexa = 1;                      // O agente tem apenas uma flecha
+    private int flecha = 1;                      // O agente tem apenas uma flecha
     private boolean vivo = true;                // Estado do agente
     private boolean saiu = false;               // Estado de saída do labirinto
+
+    public void MundoWumpus(){
+        inicializarLabirinto();
+    }
 
     private void inicializarLabirinto() {
         // Preencher o labirinto com espaços vazios
@@ -101,6 +105,67 @@ public class MundoWumpus {
                 inseridos++;
             }
         }
+    }
+
+    public int getPosicaoX() {
+        return posicaoX;
+    }
+
+    public int getPosicaoY() {
+        return posicaoY;
+    }
+
+    public int getPontuacao() {
+        return pontuacao;
+    }
+    
+    public Elementos getElemento(int x, int y) {
+        return labirinto[x][y];
+    }
+
+    public void registrarAcao() {
+        // Implementar a lógica para registrar as ações do agente e atualizar o estado do jogo
+        this.pontuacao -= 1; // Custo de cada ação
+    }
+
+     /*
+                Controles
+
+        [D] 	    | GIRAR PARA DIREITA
+        [A]		    | GIRAR PARA ESQUERDA
+        [W] 	    | MOVER
+        [E]		    | EQUIPAR FLECHA
+        [ENTER]	    | EXECUTAR AÇÃO
+
+    */
+
+    private void girarDireita(){
+
+    }
+
+    private void girarEsquerda(){
+
+    }
+
+    private void mover(){
+
+    }
+
+    private void equiparFlecha(){
+
+    }
+
+    // Pegar ouro; Atirar flecha; Subir
+    private void executarAcao(){
+
+    }
+
+    private void pegarOuro(){
+
+    }
+
+    private void sairLabirinto(){
+        
     }
 
 }

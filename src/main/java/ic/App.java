@@ -17,9 +17,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("primary"), 600, 400);
+        stage.setTitle("👺 🤷‍♂️ 💰 Mundo de Wumpus 💸 🏃‍♂️ 👹");
         stage.setScene(scene);
         stage.show();
+        scene.setOnKeyPressed(event -> {
+            // Implementar a lógica para capturar as teclas pressionadas e registrar as ações do agente
+            System.out.println("Tecla pressionada: " + event.getCode());
+        });
     }
 
     static void setRoot(String fxml) throws IOException {

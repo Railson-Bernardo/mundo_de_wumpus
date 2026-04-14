@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -12,8 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane fx:id="tela_inicial" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: mundo_de_wumpus\src\main\resources\imagens\Labirinto.png; -fx-background-color: #654c78;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="tela_inicial" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: mundo_de_wumpus\src\main\resources\imagens\Labirinto.png; -fx-background-color: #654c78;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ic.PrimaryController">
    <top>
       <GridPane alignment="CENTER" prefHeight="229.0" prefWidth="600.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -33,13 +33,20 @@
                   <Glow level="1.0" />
                </effect>
             </Label>
-            <Button fx:id="fechar_jogo" mnemonicParsing="false" onMouseClicked="#fecharJogo" prefHeight="45.0" prefWidth="83.0" style="-fx-background-color: #3b014a;" text="FECHAR" textFill="#fcc100" GridPane.rowIndex="2">
+            <Button fx:id="fechar_jogo" mnemonicParsing="false" onMouseClicked="#fecharJogo" prefHeight="45.0" prefWidth="83.0" style="-fx-background-color: #3b014a; -fx-background-radius: 20;" text="FECHAR" textFill="#fcc100" GridPane.rowIndex="2">
                <font>
                   <Font name="Comic Sans MS Bold" size="14.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <tooltip>
+                  <Tooltip fx:id="tooltip_fechar" text="Fechar Jogo">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="10.0" />
+                     </font>
+                  </Tooltip>
+               </tooltip>
                <effect>
                   <Glow level="1.0" />
                </effect>
@@ -53,7 +60,7 @@
                 <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton fx:id="selecionarAgente" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#jogarComAgente" prefHeight="45.0" prefWidth="99.0" style="-fx-background-color: #3b014a;" text="AGENTE" textAlignment="JUSTIFY" textFill="#fcc100" wrapText="true" GridPane.columnIndex="1">
+                  <RadioButton fx:id="selecionarAgente" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#jogarComAgente" prefHeight="45.0" prefWidth="99.0" style="-fx-background-color: #3b014a; -fx-background-radius: 20;" stylesheets="@../radioButtonSelected.css" text="AGENTE" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1">
                      <font>
                         <Font name="Comic Sans MS Bold" size="14.0" />
                      </font>
@@ -69,8 +76,15 @@
                      <padding>
                         <Insets left="5.0" />
                      </padding>
+                     <tooltip>
+                        <Tooltip fx:id="tooltip" text="Ativar Modo Agente">
+                           <font>
+                              <Font name="Comic Sans MS Bold" size="10.0" />
+                           </font>
+                        </Tooltip>
+                     </tooltip>
                   </RadioButton>
-                  <Button fx:id="jogar" mnemonicParsing="false" onMouseClicked="#iniciarJogo" prefHeight="45.0" prefWidth="83.0" style="-fx-background-color: #3b014a;" text="JOGAR" textFill="#fcc100">
+                  <Button fx:id="jogar" mnemonicParsing="false" onMouseClicked="#iniciarJogo" prefHeight="45.0" prefWidth="83.0" style="-fx-background-color: #3b014a; -fx-background-radius: 20;" text="JOGAR" textFill="#fcc100">
                      <font>
                         <Font name="Comic Sans MS Bold" size="14.0" />
                      </font>
@@ -83,6 +97,13 @@
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin>
+                     <tooltip>
+                        <Tooltip fx:id="tooltip_jogar" text="Iniciar Jogo">
+                           <font>
+                              <Font name="Comic Sans MS Bold" size="10.0" />
+                           </font>
+                        </Tooltip>
+                     </tooltip>
                   </Button>
                </children>
             </GridPane>
@@ -96,15 +117,24 @@
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="10.0" prefWidth="600.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="125.0" minHeight="10.0" prefHeight="125.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" prefHeight="161.0" prefWidth="615.0" style="-fx-font-family: Comic.Sans.MS; -fx-font-style: Bold;" text="&#9;&#9;CONTROLES&#10;[D] &#9;&#9;&#9;| GIRAR PARA DIREITA&#10;[A]&#9;&#9;&#9;| GIRAR PARA ESQUERDA&#10;[W] &#9;&#9;&#9;| MOVER&#10;[E]&#9;&#9;&#9;| EQUIPAR FLEXA&#10;[ENTER]&#9;&#9;| EXECUTAR AÇÃO&#10;" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Label alignment="CENTER" prefHeight="161.0" prefWidth="612.0" text="[D] &#9;&#9;| GIRAR PARA DIREITA&#10;[A]&#9;&#9;| GIRAR PARA ESQUERDA&#10;[W] &#9;&#9;| MOVER&#10;[E]&#9;&#9;| EQUIPAR FLECHA&#10;[ENTER]&#9;| EXECUTAR AÇÃO&#10;" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font name="Comic Sans MS Bold" size="14.0" />
                </font>
                <effect>
-                  <Glow />
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+            <Label alignment="BOTTOM_CENTER" layoutX="10.0" layoutY="91.0" prefHeight="95.0" prefWidth="600.0" text="CONTROLES" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BASELINE">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="14.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
                </effect>
             </Label>
          </children>
