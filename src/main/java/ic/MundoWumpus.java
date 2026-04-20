@@ -4,52 +4,8 @@ import java.util.Random;
 
 public class MundoWumpus {
 
-    /*
-        O labirinto deve ser representado por uma matriz 6 x 6.   ✔
-        O agente sempre inicia na posição [1, 1] do labirinto. [0, 0] no codigo  ✔
-        A posição [1,1] também representa a saída do labirinto.   
-
-        O agente pode executar as seguintes ações:   
-            o Mover_para_frente;   
-            o Virar_a_direita (rotação de 90°);   
-            o Pegar_objeto – Para pegar o outro (se ele existir) na sala em que o agente se encontra;   
-            o Atirar_flecha – Para lançar a flecha em linha reta na direção que o agente esta olhando;   
-            o Subir – Para sair da caverna (a ação somente pode ser executada na sala  [1,1]);   
-        •Cada ação executada possui o custo de -1. Os demais eventos possuem os seguintes custos/recompensas:   
-        o Pegar ouro = +1000;   
-        o Cair em um poço = -1000;   
-        o Ser devorado pelo Wumpus = -1000;   
-        o Atirar Flecha = -10;   
-        
-        O agente possui os seguintes sensores:   
-        o Em salas adjacentes ao Wumpus, exceto diagonal, o agente sente o fedor do Wumpus;   
-        o Em salas adjacentes a um poço, exceto diagonal, o agente sente uma brisa;   
-        o Em salas adjacentes a um morcego gigante, exceto diagonal, o agente ouve os gritos do morcego;   
-        o Em salas onde existe ouro o agente percebe o brilho do ouro;   
-        o Ao caminhar contra uma parede o agente sente um impacto. As laterais do labirinto são paredes;   
-        o Quando o Wumpus morre o agente ouve um grito;   
-        
-        O labirinto possui os seguintes elementos:   ✔
-        2 Wumpus;   ✔
-        4 Poços;   ✔
-        3 Pedras de ouro;   ✔
-        2 Morcegos;     ✔
-
-        A posição inicial dos elementos do labirinto deve ser sorteada aleatoriamente
-        no início do programa.   ✔
-        
-        O jogo acaba quando o agente sair do labirinto ou
-        quando ele morrer para o Wumpus ou ao cair em um poço.   
-        
-        Ao entrar em uma sala onde existe um morcego, o agente é carregado pelo   
-        morcego para um lugar aleatório do labirinto, podendo ser um local seguro, um   
-        poço, a sala de um Wumpus ou a sala onde existe outro morcego. Ou seja, o   
-        local onde o agente será teleportado deve ser sorteado. Após levar o agente, o   
-        morcego retorna para a sala onde ele estava originalmente.  
-
-    */
     // Constantes dos elementos
-    enum Elementos {WUMPUS, BURACO, OURO, MORCEGO, Q_VAZIO, Q_INICIAL}
+    public enum Elementos {WUMPUS, BURACO, OURO, MORCEGO, Q_VAZIO, Q_INICIAL}
 
     // Configurações padrões do labirinto
     private static final int TAMANHO = 6;
@@ -58,8 +14,8 @@ public class MundoWumpus {
     private static final int QTD_OUROS = 3;
     private static final int QTD_MOCEGOS = 2;
 
-    private Elementos[][] labirinto = new Elementos[TAMANHO][TAMANHO];
-    private boolean[][] visitado = new boolean[TAMANHO][TAMANHO];
+    private final Elementos[][] labirinto = new Elementos[TAMANHO][TAMANHO];
+    private final boolean[][] visitado = new boolean[TAMANHO][TAMANHO];
 
     // Estados iniciais do agente(jogador)
     private int posicaoX = 0, posicaoY = 0;     // Posição inicial do agente (1,1 no labirinto)
@@ -67,8 +23,9 @@ public class MundoWumpus {
     private int flecha = 1;                      // O agente tem apenas uma flecha
     private boolean vivo = true;                // Estado do agente
     private boolean saiu = false;               // Estado de saída do labirinto
+    private String ultimoEvento = "";          // Última narração de evento do jogo
 
-    public void MundoWumpus(){
+    public MundoWumpus(){
         inicializarLabirinto();
     }
 
@@ -77,11 +34,11 @@ public class MundoWumpus {
         for (int i = 0; i < TAMANHO; i++) {
             for (int j = 0; j < TAMANHO; j++) {
                 labirinto[i][j] = Elementos.Q_VAZIO;
+                visitado[i][j] = false;
             }
         }
-
-        // Colocar o agente na posição inicial
-        labirinto[posicaoX][posicaoY] = Elementos.Q_INICIAL;
+        visitado[0][0] = true; // Marcar a posição inicial como visitada
+        ultimoEvento = "Você entrou no labirinto 🕵️‍♂️";
 
         // Adicionar os elementos no labirinto
         adicionarElementos(Elementos.WUMPUS, QTD_WUMPUS);
@@ -96,15 +53,225 @@ public class MundoWumpus {
         Random rand = new Random();
         int inseridos = 0;
 
+        int xA, yA;
+        do {
+            xA = rand.nextInt(2) + 1;
+            yA = rand.nextInt(2) + 1; 
+        } while(xA == yA);
+
         while (inseridos < quantidade) {
             int x = rand.nextInt(TAMANHO);
             int y = rand.nextInt(TAMANHO);
             
-            if (labirinto[x][y] == Elementos.Q_VAZIO && !(x == 0 && y == 0)) { // Evitar colocar elementos na posição inicial
+            // Evitar colocar elementos nas primeiras salas para garantir inicio "seguro"
+            if (labirinto[x][y] == Elementos.Q_VAZIO && !(x == 0 && y == 0) && !(x == 0 && y == 1) 
+                && !(x == 1 && y == 0) && !(x == 1 && y == 1) && !(x == xA && y == yA)) {
                 labirinto[x][y] = tipo;
                 inseridos++;
             }
         }
+    }
+
+    private int direcao = 0;
+    public void girarDireita(){
+        if(!vivo || saiu == true){
+            return; // O agente está morto ou saiu, não pode girar
+        }
+        direcao = (direcao + 1 + 4) % 4; // Girar para direita
+    }
+
+    public void girarEsquerda(){
+        if(!vivo || saiu == true){
+            return; // O agente está morto ou saiu, não pode girar
+        }
+        direcao = (direcao - 1 + 4) % 4; // Girar para esquerda 
+    }
+
+    public void moverFrente(){
+        if(!vivo || saiu == true){
+            return; // O agente está morto ou saiu, não pode se mover
+        }
+        ultimoEvento = "";
+        int novoX = posicaoX;
+        int novoY = posicaoY;
+
+        switch (direcao){
+            // Andar Para Baixo
+            case 0 -> novoX ++;
+            // Andar Para Esquerda
+            case 1 -> novoY --;
+            // Andar Para Cima
+            case 2 -> novoX --;
+            // Andar Para Direita
+            case 3 -> novoY ++;
+        }
+
+        if(novoX >= 0 && novoX < TAMANHO && novoY >= 0 && novoY < TAMANHO){
+            posicaoX = novoX;
+            posicaoY = novoY;
+            visitado[posicaoX][posicaoY] = true; // Revelar sala visitada
+            pontuacao -= 1; // Custo de mover
+            verificarEstado();
+        } else {
+            ultimoEvento = "Batir Em Algo Grande e Grosso... Uma Parede Talvez";
+        }
+    }
+
+    private void verificarEstado(){
+        Elementos atual = labirinto[posicaoX][posicaoY];
+        if(null != atual)switch (atual) {
+            case WUMPUS -> {
+                vivo = false;
+                pontuacao -= 1000; // Penalidade por morrer
+                ultimoEvento = "Você Foi Devorado Pelo Wumpus 👻";
+            }
+            case BURACO -> {
+                vivo = false;
+                pontuacao -= 1000; // Penalidade por morrer
+                ultimoEvento = "Você Caiu em um Buraco 🕳☠";
+            }
+            case MORCEGO -> {
+                posicaoX = new Random().nextInt(TAMANHO);
+                posicaoY = new Random().nextInt(TAMANHO);
+                visitado[posicaoX][posicaoY] = true; // Revelar nova posição após ser transportado
+                ultimoEvento = "Um Morcego Te Levou Para Outro Lugar 🦇🤦‍♂️";
+                verificarEstado(); // Verificar o estado após ser transportado pelo morcego
+            }
+            default -> {
+            }
+        }
+    }
+
+    private boolean flechaEquipada = false;
+    public void equiparFlecha(){
+        if(flecha > 0){
+            this.flechaEquipada = !this.flechaEquipada; // Alterna entre equipado e não equipado
+        }
+    }
+
+    // Pegar ouro; Atirar flecha; Subir
+    public void executarAcao(){
+        if (labirinto[posicaoX][posicaoY] == Elementos.OURO) {
+            pegarOuro();
+        } else if (posicaoX == 0 && posicaoY == 0) {
+            sairLabirinto();
+        } else if (flechaEquipada && flecha > 0) {
+            atirarFlecha();
+        }
+    }
+
+    public void atirarFlecha(){
+        if(flecha > 0){
+            flecha--;
+            pontuacao -= 10; // Custo de atirar a flecha
+            flechaEquipada = false;
+
+            int dx = 0, dy = 0;
+            switch (direcao) {
+                // Baixo
+                case 0 -> dx = 1;
+                // Esquerda
+                case 1 -> dy = -1;
+                // Cima
+                case 2 -> dx = -1;
+                // Direita
+                case 3 -> dy = 1;
+            }
+
+            int alvoX = posicaoX + dx;
+            int alvoY = posicaoY + dy;
+            boolean acertou = false;
+
+            while(alvoX >= 0 && alvoX < TAMANHO && alvoY >= 0 && alvoY < TAMANHO){
+                if(labirinto[alvoX][alvoY] == Elementos.WUMPUS){
+                    labirinto[alvoX][alvoY] = Elementos.Q_VAZIO; // Matar o Wumpus
+                    acertou = true;
+                    break;
+                }
+                alvoX += dx;
+                alvoY += dy;
+            }
+
+            if(acertou){
+                ultimoEvento = "Você Ouve Um Grito de Morte 😖";
+            } else {
+                ultimoEvento = "A flecha não acertou nada... 😕";
+            }
+        }
+    }
+
+    public void pegarOuro(){
+        if(labirinto[posicaoX][posicaoY] == Elementos.OURO){
+            pontuacao += 1000; // Recompensa por pegar ouro
+            labirinto[posicaoX][posicaoY] = Elementos.Q_VAZIO; // Remover o ouro da sala
+            ultimoEvento = "Você encontrou ouro 🤑";
+        }
+    }
+
+    public void sairLabirinto(){
+        if(flechaEquipada == true){
+            ultimoEvento = "Flecha equipada! Você precisa desequipar para sair 🏃‍♂️";
+        } else if(posicaoX == 0 && posicaoY == 0){
+            saiu = true;
+        }
+    }
+
+    public String avisos(int x, int y){
+        StringBuilder aviso = new StringBuilder();
+
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        boolean fedor = false, brisa = false, grito = false, brilho = false;
+        for (int i = 0; i < 4; i++){
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if(nx >= 0 && nx < TAMANHO && ny >= 0 && ny < TAMANHO){
+                Elementos vizinho = labirinto[nx][ny];
+                if(null != vizinho) switch (vizinho) {
+                    case WUMPUS -> fedor = true;
+                    case BURACO -> brisa = true;
+                    case MORCEGO -> grito = true;
+                    case OURO -> brilho = true;
+                    default -> {
+                    }
+                } 
+            }
+        }
+        if(fedor) {
+            aviso.append("Fedor\n");
+        }
+        if(brisa) {
+            aviso.append("Brisa\n");
+        }
+        if(grito) {
+            aviso.append("Barulho\n");
+        }
+        if(brilho) {
+            aviso.append("Brilho\n");
+        }
+        return aviso.toString().trim();
+    }
+
+    public String avisos(){
+        return avisos(posicaoX, posicaoY);
+    }
+
+    public void revelarMapa(){
+        for (int i = 0; i < TAMANHO; i++) {
+            for (int j = 0; j < TAMANHO; j++) {
+                visitado[i][j] = true;
+            }
+        }
+    }
+
+    public int getFlecha(){
+        return flecha;
+    }
+
+    public boolean getFlechaEquipada() {
+        return flechaEquipada;
     }
 
     public int getPosicaoX() {
@@ -123,49 +290,27 @@ public class MundoWumpus {
         return labirinto[x][y];
     }
 
-    public void registrarAcao() {
-        // Implementar a lógica para registrar as ações do agente e atualizar o estado do jogo
-        this.pontuacao -= 1; // Custo de cada ação
+    public boolean isVivo(){
+        return vivo;
     }
 
-     /*
-                Controles
-
-        [D] 	    | GIRAR PARA DIREITA
-        [A]		    | GIRAR PARA ESQUERDA
-        [W] 	    | MOVER
-        [E]		    | EQUIPAR FLECHA
-        [ENTER]	    | EXECUTAR AÇÃO
-
-    */
-
-    private void girarDireita(){
-
+    public int getDirecao() {
+        return direcao;
     }
 
-    private void girarEsquerda(){
-
+    public String getUltimoEvento() {
+        return ultimoEvento;
     }
 
-    private void mover(){
-
+    public void setUltimoEvento(String evento) {
+        this.ultimoEvento = evento;
     }
 
-    private void equiparFlecha(){
-
+    public boolean isVisitado(int x, int y){
+        return visitado[x][y];
     }
 
-    // Pegar ouro; Atirar flecha; Subir
-    private void executarAcao(){
-
+    public boolean isSaiu() {
+        return saiu;
     }
-
-    private void pegarOuro(){
-
-    }
-
-    private void sairLabirinto(){
-        
-    }
-
 }

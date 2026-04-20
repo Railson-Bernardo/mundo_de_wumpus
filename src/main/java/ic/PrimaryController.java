@@ -39,7 +39,7 @@ public class PrimaryController {
 
     @FXML
     void iniciarJogo(MouseEvent event) throws IOException {
-        App.setRoot("src/main/resources/ic/secondary");
+        App.setRoot("secondary", 710, 730);
     }
 
     @FXML
