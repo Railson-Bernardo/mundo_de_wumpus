@@ -114,7 +114,7 @@
                         <Insets />
                      </GridPane.margin>
                      <tooltip>
-                        <Tooltip fx:id="tooltip_controles" text="[D] &#9;&#9;| GIRAR PARA DIREITA&#10;[A]&#9;&#9;| GIRAR PARA ESQUERDA&#10;[W] &#9;&#9;| MOVER&#10;[E]&#9;&#9;| EQUIPAR FLECHA&#10;[ENTER]&#9;| EXECUTAR AÇÃO&#10;">
+                        <Tooltip fx:id="tooltip_controles" text="[D] &#9;&#9;| GIRAR PARA DIREITA ↻&#10;[A]&#9;&#9;| GIRAR PARA ESQUERDA ↺&#10;[W] &#9;&#9;| MOVER&#10;[E]&#9;&#9;| EQUIPAR FLECHA&#10;[ENTER]&#9;| EXECUTAR AÇÃO&#10;">
                            <font>
                               <Font name="Comic Sans MS Bold" size="12.0" />
                            </font>

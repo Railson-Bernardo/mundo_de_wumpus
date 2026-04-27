@@ -121,7 +121,7 @@
           <RowConstraints maxHeight="125.0" minHeight="10.0" prefHeight="125.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" prefHeight="161.0" prefWidth="612.0" text="[D] &#9;&#9;| GIRAR PARA DIREITA&#10;[A]&#9;&#9;| GIRAR PARA ESQUERDA&#10;[W] &#9;&#9;| MOVER&#10;[E]&#9;&#9;| EQUIPAR FLECHA&#10;[ENTER]&#9;| EXECUTAR AÇÃO&#10;" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Label alignment="CENTER" prefHeight="161.0" prefWidth="612.0" text="[D] &#9;&#9;| GIRAR PARA DIREITA &#10;[A]&#9;&#9;| GIRAR PARA ESQUERDA&#10;[W] &#9;&#9;| MOVER&#10;[E]&#9;&#9;| EQUIPAR FLECHA&#10;[ENTER]&#9;| EXECUTAR AÇÃO&#10;" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font name="Comic Sans MS Bold" size="14.0" />
                </font>
@@ -132,6 +132,22 @@
             <Label alignment="BOTTOM_CENTER" layoutX="10.0" layoutY="91.0" prefHeight="95.0" prefWidth="600.0" text="CONTROLES" textAlignment="JUSTIFY" textFill="#fcc100" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BASELINE">
                <font>
                   <Font name="Comic Sans MS Bold" size="14.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+            <Label prefHeight="35.0" prefWidth="163.0" text="↻" textFill="#fabb00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="20.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+            <Label alignment="TOP_LEFT" layoutX="447.0" layoutY="46.0" prefHeight="74.0" prefWidth="147.0" text="↺" textFill="#fabb00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="20.0" />
                </font>
                <effect>
                   <Glow level="1.0" />

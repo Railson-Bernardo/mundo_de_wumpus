@@ -3,11 +3,12 @@ package ic;
 import java.io.IOException;
 
 import ic.MundoWumpus.Elementos;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -38,13 +39,15 @@ public class SecondaryController {
     private Button voltar_tela_inicial;
 
     private MundoWumpus jogo;
+    private Agente agenteJogo;
 
     @FXML
     @SuppressWarnings("unused")
     void reiniciarJogo(MouseEvent event) {
-        jogo = new MundoWumpus();
-        jogo.setUltimoEvento("Jogo reiniciado!");
-        atualizarLabirinto();
+        initialize(); // Reinicia o jogo e atualiza o labirinto
+        // jogo = new MundoWumpus();
+        // jogo.setUltimoEvento("Jogo reiniciado!");
+        // atualizarLabirinto();
     }
 
     @FXML
@@ -56,8 +59,14 @@ public class SecondaryController {
     @FXML
     @SuppressWarnings("unused")
     private void initialize() {
-        jogo = new MundoWumpus(); 
+        jogo = new MundoWumpus();
         atualizarLabirinto();
+        if (App.isAgentMode()) {
+            new Thread(() -> {
+                agenteJogo = new Agente(jogo, SecondaryController.this);
+                agenteJogo.executar();
+            }, "Agente-Automatico").start();
+        }
     }
 
     @SuppressWarnings("exports")

@@ -18,6 +18,15 @@ public class App extends Application {
     private static Scene scene;
     private static Stage stage;
     private static SecondaryController secondaryController;
+    private static boolean agentMode = false;
+
+    public static void setAgentMode(boolean mode) {
+        agentMode = mode;
+    }
+
+    public static boolean isAgentMode() {
+        return agentMode;
+    }
 
     @Override
     public void start(@SuppressWarnings("exports") Stage stage) throws IOException {
@@ -29,30 +38,31 @@ public class App extends Application {
         stage.show();
         scene.getRoot().requestFocus();
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (secondaryController != null) {
-                switch (event.getCode()){
-                    case W -> { 
-                        secondaryController.moverFrente();
-                        event.consume();
-                    }
-                    case A -> { 
-                        secondaryController.girarEsquerda();
-                        event.consume();
-                    }
-                    case D -> { 
-                        secondaryController.girarDireita();
-                        event.consume();
-                    }
-                    case E -> { 
-                        secondaryController.equiparFlecha();
-                        event.consume();
-                    }
-                    case ENTER -> { 
-                        secondaryController.executarAcao();
-                        event.consume();
-                    }
-                    default -> {
-                    }
+            if (agentMode || secondaryController == null) {
+                return;
+            }
+            switch (event.getCode()){
+                case W -> {
+                    secondaryController.moverFrente();
+                    event.consume();
+                }
+                case A -> {
+                    secondaryController.girarEsquerda();
+                    event.consume();
+                }
+                case D -> {
+                    secondaryController.girarDireita();
+                    event.consume();
+                }
+                case E -> {
+                    secondaryController.equiparFlecha();
+                    event.consume();
+                }
+                case ENTER -> {
+                    secondaryController.executarAcao();
+                    event.consume();
+                }
+                default -> {
                 }
             }
         });
